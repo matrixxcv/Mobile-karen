@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { CheckCircle2, Loader2, Phone, Smartphone, Wrench } from 'lucide-react'
 import SectionHeading from '@/components/SectionHeading'
 import { REPAIR_PHONE, REPAIR_PHONE_TEL } from '@/data/repairs'
+import { supabase, supabaseConfigured } from '@/lib/supabase'
 
 type FormState = {
   name: string
@@ -23,6 +24,7 @@ export default function RepairRequest() {
   const [form, setForm] = useState<FormState>(initialForm)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     document.title = 'درخواست تعمیر | موبایل کارن'
@@ -32,15 +34,42 @@ export default function RepairRequest() {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setLoading(true)
+    setMessage('')
 
-    setTimeout(() => {
-      setLoading(false)
+    try {
+      if (!supabaseConfigured || !supabase) {
+        setMessage('Supabase فعال نیست؛ برای ثبت واقعی درخواست، متغیرهای محیطی را مقداردهی کنید.')
+        setLoading(false)
+        return
+      }
+
+      const { data: { user } } = await supabase.auth.getUser()
+
+      const { error } = await supabase.from('repairs').insert({
+        user_id: user?.id ?? null,
+        customer_name: form.name,
+        phone: form.phone,
+        device: form.model,
+        issue: form.issue,
+        notes: form.description,
+        status: 'received'
+      })
+
+      if (error) throw error
+
       setSubmitted(true)
       setForm(initialForm)
-    }, 900)
+      setMessage('درخواست شما با موفقیت ثبت شد. تیم فنی در کوتاه‌ترین زمان با شما تماس می‌گیرد.')
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'ثبت درخواست انجام نشد.'
+      setMessage(msg)
+      setSubmitted(false)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -117,10 +146,10 @@ export default function RepairRequest() {
             </label>
           </div>
 
-          {submitted && (
-            <div className="mt-5 flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
-              <CheckCircle2 className="h-4 w-4" />
-              درخواست شما با موفقیت ثبت شد. تیم فنی در کوتاه‌ترین زمان با شما تماس می‌گیرد.
+          {(submitted || message) && (
+            <div className={`mt-5 flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${submitted ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-amber-500/30 bg-amber-500/10 text-amber-200'}`}>
+              {submitted && <CheckCircle2 className="h-4 w-4" />}
+              {message || 'درخواست شما با موفقیت ثبت شد. تیم فنی در کوتاه‌ترین زمان با شما تماس می‌گیرد.'}
             </div>
           )}
 

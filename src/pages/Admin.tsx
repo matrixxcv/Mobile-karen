@@ -20,38 +20,52 @@ export default function Admin() {
   const [saving, setSaving] = useState(false)
 
   async function load() {
-    if (!supabaseConfigured || !supabase) return
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
+    if (!supabaseConfigured || !supabase) {
       setAllowed(false)
       return
     }
 
-    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle()
-    const isAdmin = profile?.role === 'admin'
-    setAllowed(isAdmin)
-    if (!isAdmin) return
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        setAllowed(false)
+        return
+      }
 
-    const [p, o, r] = await Promise.all([
-      supabase.from('products').select('id', { count: 'exact', head: true }),
-      supabase.from('orders').select('id', { count: 'exact', head: true }),
-      supabase.from('repairs').select('id', { count: 'exact', head: true }),
-    ])
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle()
+      const isAdmin = profile?.role === 'admin'
+      setAllowed(isAdmin)
+      if (!isAdmin) return
 
-    setStats({ products: p.count || 0, orders: o.count || 0, repairs: r.count || 0 })
+      const [p, o, r] = await Promise.all([
+        supabase.from('products').select('id', { count: 'exact', head: true }),
+        supabase.from('orders').select('id', { count: 'exact', head: true }),
+        supabase.from('repairs').select('id', { count: 'exact', head: true }),
+      ])
 
-    const { data } = await supabase.from('products').select('id,name,price,stock,active').order('slug')
-    setProducts((data || []) as Row[])
+      setStats({ products: p.count || 0, orders: o.count || 0, repairs: r.count || 0 })
+
+      const { data, error } = await supabase.from('products').select('id,name,price,stock,active').order('slug')
+      if (!error) setProducts((data || []) as Row[])
+    } catch {
+      setAllowed(false)
+    }
   }
 
   useEffect(() => { load() }, [])
 
   async function updateProduct(id: string, patch: Partial<Row>) {
-    if (!supabase) return
+    if (!supabaseConfigured || !supabase) {
+      return
+    }
+
     setSaving(true)
-    await supabase.from('products').update(patch).eq('id', id)
-    await load()
-    setSaving(false)
+    try {
+      await supabase.from('products').update(patch).eq('id', id)
+      await load()
+    } finally {
+      setSaving(false)
+    }
   }
 
   const quickTasks = [
@@ -62,7 +76,7 @@ export default function Admin() {
   ]
 
   if (allowed === null) return <div className="mx-auto max-w-5xl px-4 py-20 text-center text-silver">در حال بررسی دسترسی...</div>
-  if (!allowed) return <div className="mx-auto max-w-xl px-4 py-20 text-center"><h1 className="text-2xl font-bold text-silver-bright">دسترسی محدود است</h1><p className="mt-3 text-silver-dim">برای ورود به پنل مدیریت باید حساب شما نقش admin داشته باشد.</p><Link to="/auth" className="mt-6 inline-block rounded-xl bg-blue px-5 py-3 font-bold text-white">ورود</Link></div>
+  if (!allowed) return <div className="mx-auto max-w-xl px-4 py-20 text-center"><h1 className="text-2xl font-bold text-silver-bright">دسترسی محدود است</h1><p className="mt-3 text-silver-dim">{supabaseConfigured ? 'برای ورود به پنل مدیریت باید حساب شما نقش admin داشته باشد.' : 'Supabase فعال نیست؛ متغیرهای محیطی VITE_SUPABASE_URL و VITE_SUPABASE_ANON_KEY را تنظیم کنید.'}</p><Link to="/auth" className="mt-6 inline-block rounded-xl bg-blue px-5 py-3 font-bold text-white">ورود</Link></div>
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-14 md:px-8">
