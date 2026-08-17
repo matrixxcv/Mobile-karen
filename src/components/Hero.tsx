@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom'
-import { ShieldCheck, Wrench, Smartphone, ArrowLeft } from 'lucide-react'
+import { ShieldCheck, Wrench, Smartphone, ArrowLeft, Star, BadgeCheck } from 'lucide-react'
 
 export default function Hero() {
   return (
     <section className="relative overflow-hidden px-4 pb-16 pt-14 md:px-8 md:pb-24 md:pt-20">
-      <div className="pointer-events-none absolute inset-0 grid-veil" />
+      <div className="pointer-events-none absolute inset-0 grid-veil opacity-80" />
       <div className="pointer-events-none absolute right-1/2 top-0 h-[420px] w-[420px] translate-x-1/2 rounded-full bg-blue/25 blur-[110px] animate-pulseglow" />
       <div className="pointer-events-none absolute left-10 top-40 h-56 w-56 rounded-full bg-sky/20 blur-[90px]" />
 
       <div className="relative mx-auto max-w-5xl text-center">
-        <span className="animate-rise inline-flex items-center gap-2 rounded-full border border-line bg-white/5 px-4 py-1.5 text-xs font-medium text-sky">
+        <span className="animate-rise inline-flex items-center gap-2 rounded-full border border-sky/30 bg-sky/10 px-4 py-1.5 text-xs font-medium text-sky shadow-[0_0_25px_rgba(56,189,248,0.18)]">
+          <BadgeCheck className="h-3.5 w-3.5" />
           فروش تخصصی آیفون در ملایر
         </span>
 
@@ -18,7 +19,7 @@ export default function Hero() {
         </h1>
 
         <p className="animate-rise mx-auto mt-5 max-w-2xl text-base leading-8 text-silver-dim md:text-lg" style={{ animationDelay: '160ms' }}>
-          جدیدترین مدل‌های آیفون، مشاوره تخصصی و خدمات تعمیرات حرفه‌ای
+          جدیدترین مدل‌های آیفون، مشاوره تخصصی و خدمات تعمیرات حرفه‌ای با تجربه‌ای متفاوت
         </p>
 
         <div className="animate-rise mt-9 flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: '240ms' }}>
@@ -45,7 +46,25 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="relative mx-auto mt-16 max-w-4xl animate-rise" style={{ animationDelay: '320ms' }}>
+      <div className="relative mx-auto mt-12 grid max-w-5xl gap-4 md:grid-cols-3 animate-rise" style={{ animationDelay: '320ms' }}>
+        {[
+          { label: '۱۵ مدل آیفون', value: 'از سری ۱۳ تا ۱۷' },
+          { label: 'تعمیرات تخصصی', value: 'با تضمین کیفیت' },
+          { label: 'رضایت مشتری', value: 'خدمات حرفه‌ای و سریع' }
+        ].map((item) => (
+          <div key={item.label} className="section-shell flex items-center justify-between gap-4 p-4 text-right">
+            <div>
+              <p className="text-xs text-silver-dim">{item.label}</p>
+              <p className="mt-1 font-display text-lg font-bold text-silver-bright">{item.value}</p>
+            </div>
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky/10 text-sky">
+              <Star className="h-5 w-5" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="relative mx-auto mt-16 max-w-4xl animate-rise" style={{ animationDelay: '420ms' }}>
         <Link
           to="/vpn"
           className="focus-ring group flex flex-col items-center gap-6 overflow-hidden rounded-3xl glass-strong p-8 text-center transition-all hover:border-sky/40 hover:shadow-glow md:flex-row md:text-right"
