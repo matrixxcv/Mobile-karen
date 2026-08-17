@@ -6,12 +6,31 @@ import type { Product } from '@/types'
 
 const PRICE_NOTE = 'برای استعلام قیمت تماس بگیرید'
 
+const PRODUCT_DIRS: Record<string, string> = {
+  'iphone-13': 'IPHONE - 13',
+  'iphone-13-pro': 'IPHONE - 13pro',
+  'iphone-13-pro-max': 'IPHONE - 13promax',
+  'iphone-14': 'IPHONE - 14',
+  'iphone-14-pro': 'IPHONE -14pro',
+  'iphone-14-pro-max': 'IPHONE -14promax',
+  'iphone-15': 'IPHONE - 15',
+  'iphone-15-pro': 'IPHONE - 15pro',
+  'iphone-15-pro-max': 'IPHONE - 15promax',
+  'iphone-16': 'IPHONE -16',
+  'iphone-16-pro': 'IPHONE - 16pro',
+  'iphone-16-pro-max': 'IPHONE - 16promax',
+  'iphone-17': 'IPHONE -17',
+  'iphone-17-pro': 'IPHONE - 17pro',
+  'iphone-17-pro-max': 'IPHONE - 17promax'
+}
+
 function img(id: string, index: number) {
-  return `/assets/products/${id}/${index}.svg`
+  const folder = PRODUCT_DIRS[id] ?? id.replace(/-/g, ' ')
+  return `/assets/products/${encodeURIComponent(folder)}/${index}.svg`
 }
 
 function gallery(id: string) {
-  return [img(id, 1), img(id, 2), img(id, 3), img(id, 4)]
+  return [1, 2, 3, 4].map((index) => img(id, index))
 }
 
 export const products: Product[] = [

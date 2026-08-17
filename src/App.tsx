@@ -8,6 +8,7 @@ import Products from '@/pages/Products'
 import ProductDetails from '@/pages/ProductDetails'
 import Comparison from '@/pages/Comparison'
 import Repairs from '@/pages/Repairs'
+import RepairRequest from '@/pages/RepairRequest'
 import Contact from '@/pages/Contact'
 import About from '@/pages/About'
 import VpnHome from '@/pages/vpn/VpnHome'
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/iphones/:id" element={<ProductDetails />} />
           <Route path="/comparison" element={<Comparison />} />
           <Route path="/repairs" element={<Repairs />} />
+          <Route path="/repairs/request" element={<RepairRequest />} />
           <Route path="/vpn" element={<VpnHome />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

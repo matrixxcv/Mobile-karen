@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Wrench, BatteryFull, MonitorSmartphone, Cpu, Camera, Plug, Volume2, Mic, Code2, Search, Phone
 } from 'lucide-react'
@@ -49,13 +50,21 @@ export default function Repairs() {
       <div className="mt-12 flex flex-col items-center gap-4 rounded-3xl glass-strong p-8 text-center">
         <p className="text-sm text-silver-dim">شماره تماس مستقیم بخش تعمیرات</p>
         <p className="font-display text-2xl font-extrabold text-silver-bright" dir="ltr">{REPAIR_PHONE}</p>
-        <a
-          href={`tel:${REPAIR_PHONE_TEL}`}
-          className="focus-ring flex items-center gap-2 rounded-xl bg-blue px-8 py-4 text-base font-bold text-white shadow-glow-blue transition-transform hover:-translate-y-0.5"
-        >
-          <Phone className="h-5 w-5" />
-          تماس با بخش تعمیرات
-        </a>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <a
+            href={`tel:${REPAIR_PHONE_TEL}`}
+            className="focus-ring flex items-center gap-2 rounded-xl bg-blue px-8 py-4 text-base font-bold text-white shadow-glow-blue transition-transform hover:-translate-y-0.5"
+          >
+            <Phone className="h-5 w-5" />
+            تماس با بخش تعمیرات
+          </a>
+          <Link
+            to="/repairs/request"
+            className="focus-ring flex items-center justify-center rounded-xl border border-sky/40 bg-sky/10 px-8 py-4 text-base font-bold text-sky transition-transform hover:-translate-y-0.5"
+          >
+            درخواست تعمیر جدید
+          </Link>
+        </div>
       </div>
     </section>
   )

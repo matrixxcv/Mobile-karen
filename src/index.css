@@ -16,6 +16,30 @@ body {
 
 ::selection { background: #2563FF; color: #F1F5F9; }
 
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-rise {
+  animation: rise 0.7s ease-out both;
+}
+
+.float-soft {
+  animation: float-soft 5s ease-in-out infinite;
+}
+
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: #030711; }
 ::-webkit-scrollbar-thumb { background: #1c2a44; border-radius: 8px; }

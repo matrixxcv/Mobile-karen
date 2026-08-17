@@ -1,5 +1,7 @@
 import type { Product, ProductSpecs, AccessoryProduct } from '@/types'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseConfigured } from '@/lib/supabase'
+import { products as localProducts } from '@/data/products'
+import { accessories as localAccessories } from '@/data/accessories'
 
 export type DbProduct = {
   id: string
@@ -69,23 +71,33 @@ export function mapDbProduct(row: DbProduct): Product {
 }
 
 export async function fetchProducts(): Promise<Product[]> {
-  if (!supabase) return []
+  if (!supabaseConfigured || !supabase) return localProducts
+
   const { data, error } = await supabase.from('products').select('*').eq('active', true).order('slug')
-  if (error) throw error
+  if (error) return localProducts
+  if (!data || data.length === 0) return localProducts
   return (data as DbProduct[]).map(mapDbProduct)
 }
 
 export async function fetchProductBySlug(slug: string): Promise<Product | null> {
-  if (!supabase) return null
+  if (!supabaseConfigured || !supabase) {
+    return localProducts.find((product) => product.id === slug) ?? null
+  }
+
   const { data, error } = await supabase.from('products').select('*').eq('slug', slug).eq('active', true).maybeSingle()
-  if (error) throw error
-  return data ? mapDbProduct(data as DbProduct) : null
+  if (error) {
+    return localProducts.find((product) => product.id === slug) ?? null
+  }
+  return data ? mapDbProduct(data as DbProduct) : (localProducts.find((product) => product.id === slug) ?? null)
 }
 
 export async function fetchAccessories(): Promise<AccessoryProduct[]> {
-  if (!supabase) return []
+  if (!supabaseConfigured || !supabase) return localAccessories
+
   const { data, error } = await supabase.from('accessories').select('*').eq('active', true).order('name')
-  if (error) throw error
+  if (error) return localAccessories
+  if (!data || data.length === 0) return localAccessories
+
   return (data || []).map((row: any) => ({
     id: row.slug,
     name: row.name,
