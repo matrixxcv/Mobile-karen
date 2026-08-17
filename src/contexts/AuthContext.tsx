@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     void bootstrap()
 
-    const { data: { subscription } } = client.auth.onAuthStateChange(async (_event, nextSession) => {
+    const { data: { subscription } } = client.auth.onAuthStateChange(async (_event: string, nextSession: any) => {
       setSession(nextSession)
       setUser(nextSession?.user ?? null)
       await loadProfile(nextSession?.user ?? null)

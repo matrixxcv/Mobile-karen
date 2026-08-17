@@ -327,7 +327,7 @@ export default function Admin() {
         supabase.from('orders').select('total_amount')
       ])
 
-      const revenue = (revenueResult.data || []).reduce((sum, item) => sum + Number(item.total_amount || 0), 0)
+      const revenue = (revenueResult.data || []).reduce((sum: number, item: any) => sum + Number(item.total_amount || 0), 0)
       const fallbackProducts = (p.count && p.count > 0) ? demoProducts : demoProducts
 
       setStats({
