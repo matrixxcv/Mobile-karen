@@ -13,12 +13,36 @@ export default function Auth() {
   async function submit(e:FormEvent){
     e.preventDefault(); setMessage('')
     if(!supabaseConfigured || !supabase){ setMessage('ابتدا Supabase را در فایل .env تنظیم کنید.'); return }
-    const result = mode==='login'
-      ? await supabase.auth.signInWithPassword({email,password})
-      : await supabase.auth.signUp({email,password,options:{data:{full_name:name}}})
-    if(result.error) return setMessage(result.error.message)
-    setMessage(mode==='login' ? 'ورود موفق بود.' : 'حساب ساخته شد؛ در صورت فعال بودن تأیید ایمیل، ایمیل خود را تأیید کنید.')
-    if(mode==='login') navigate('/')
+
+    try {
+      const result = mode==='login'
+        ? await supabase.auth.signInWithPassword({email,password})
+        : await supabase.auth.signUp({email,password,options:{data:{full_name:name}}})
+
+      if(result.error) return setMessage(result.error.message)
+
+      if (mode === 'signup' && result.data.user) {
+        await supabase.from('profiles').upsert({
+          id: result.data.user.id,
+          full_name: name || email,
+          role: 'customer'
+        }, { onConflict: 'id' })
+      }
+
+      if (result.data.user) {
+        await supabase.from('profiles').upsert({
+          id: result.data.user.id,
+          full_name: name || result.data.user.email || email,
+          phone: '',
+          role: 'customer'
+        }, { onConflict: 'id' })
+      }
+
+      setMessage(mode==='login' ? 'ورود موفق بود.' : 'حساب ساخته شد؛ در صورت فعال بودن تأیید ایمیل، ایمیل خود را تأیید کنید.')
+      if(mode==='login') navigate('/')
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'عملیات انجام نشد.')
+    }
   }
   return <section className="mx-auto max-w-md px-4 py-16">
     <div className="glass rounded-3xl p-7">
