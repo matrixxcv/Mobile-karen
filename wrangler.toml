@@ -1,0 +1,11 @@
+name = "mobile-karen"
+compatibility_date = "2025-08-17"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+[vars]
+VITE_SUPABASE_URL = "https://nxzvypiyfrbxnmjwqoal.supabase.co"
+VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54enZ5cGl5ZnJieG5tandxb2FsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5MDA1MDMsImV4cCI6MjEwMjQ3NjUwM30.fCkC0JbJh16vAnpdnYMnZeYWk5MMIEZh3OVPEEb8yAs"
