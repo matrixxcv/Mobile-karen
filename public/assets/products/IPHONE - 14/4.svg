@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1220"/><stop offset="1" stop-color="#17243d"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#2563ff" flood-opacity=".28"/></filter></defs>
+<rect width="300" height="420" fill="transparent"/><rect x="78" y="18" width="144" height="384" rx="28" fill="url(#g)" stroke="#64748b" stroke-opacity=".45" stroke-width="3" filter="url(#s)"/>
+<rect x="88" y="30" width="124" height="360" rx="22" fill="#050b16" stroke="#38bdf8" stroke-opacity=".22"/>
+<rect x="132" y="40" width="36" height="9" rx="5" fill="#000"/><circle cx="183" cy="44" r="3" fill="#1e293b"/>
+<circle cx="108" cy="62" r="12" fill="#1e293b"/><circle cx="108" cy="62" r="7" fill="hsl(116 75% 65% / .45)"/><circle cx="108" cy="91" r="12" fill="#1e293b"/><circle cx="108" cy="91" r="7" fill="hsl(151 75% 65% / .45)"/>
+<text x="150" y="225" fill="#9fc3ff" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">MOBILE KAREN</text><text x="150" y="247" fill="#64748b" font-family="Arial,sans-serif" font-size="9" text-anchor="middle">14</text>
+</svg>
