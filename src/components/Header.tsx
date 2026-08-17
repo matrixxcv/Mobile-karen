@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Menu, X, Smartphone } from 'lucide-react'
+import { Menu, ShoppingCart, Smartphone, X } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
+import { useCart } from '@/contexts/CartContext'
 
 const NAV_ITEMS = [
   { to: '/', label: 'خانه' },
@@ -16,6 +18,8 @@ const NAV_ITEMS = [
 export default function Header() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { user, profile, signOut } = useAuth()
+  const { itemCount } = useCart()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -26,6 +30,11 @@ export default function Header() {
   useEffect(() => {
     setOpen(false)
   }, [])
+
+  const handleLogout = async () => {
+    await signOut()
+    window.location.href = '/'
+  }
 
   return (
     <header
@@ -62,6 +71,37 @@ export default function Header() {
           ))}
         </nav>
 
+        <div className="hidden items-center gap-2 lg:flex">
+          <NavLink to="/cart" className="relative rounded-lg border border-line bg-white/5 p-2.5 text-silver-bright">
+            <ShoppingCart className="h-5 w-5" />
+            {itemCount > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-bold text-slate-950">
+                {itemCount}
+              </span>
+            )}
+          </NavLink>
+
+          {user ? (
+            <>
+              <span className="rounded-lg border border-line bg-white/5 px-3 py-2 text-xs text-silver-dim">
+                {profile?.full_name || user.email || 'کاربر'}
+              </span>
+              {profile?.role === 'admin' && (
+                <NavLink to="/admin" className="rounded-lg bg-sky px-3 py-2 text-xs font-bold text-slate-950">
+                  پنل ادمین
+                </NavLink>
+              )}
+              <button onClick={handleLogout} className="rounded-lg border border-line bg-white/5 px-3 py-2 text-xs font-medium text-silver-bright">
+                خروج
+              </button>
+            </>
+          ) : (
+            <NavLink to="/auth" className="rounded-lg bg-blue px-3 py-2 text-xs font-bold text-white">
+              ورود / ثبت‌نام
+            </NavLink>
+          )}
+        </div>
+
         <button
           className="focus-ring flex h-10 w-10 items-center justify-center rounded-lg text-silver-bright lg:hidden"
           aria-label={open ? 'بستن منو' : 'باز کردن منو'}
@@ -90,6 +130,25 @@ export default function Header() {
                 {item.label}
               </NavLink>
             ))}
+            <NavLink to="/cart" onClick={() => setOpen(false)} className="rounded-lg border border-line bg-white/5 px-3.5 py-3 text-base text-silver-bright">
+              سبد خرید
+            </NavLink>
+            {user ? (
+              <>
+                {profile?.role === 'admin' && (
+                  <NavLink to="/admin" onClick={() => setOpen(false)} className="rounded-lg bg-sky px-3.5 py-3 text-base font-bold text-slate-950">
+                    پنل ادمین
+                  </NavLink>
+                )}
+                <button onClick={() => { void handleLogout(); setOpen(false) }} className="rounded-lg border border-line bg-white/5 px-3.5 py-3 text-left text-base text-silver-bright">
+                  خروج
+                </button>
+              </>
+            ) : (
+              <NavLink to="/auth" onClick={() => setOpen(false)} className="rounded-lg bg-blue px-3.5 py-3 text-base font-bold text-white">
+                ورود / ثبت‌نام
+              </NavLink>
+            )}
           </div>
         </nav>
       )}
