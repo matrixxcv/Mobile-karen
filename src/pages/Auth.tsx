@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { supabase, supabaseConfigured } from '@/lib/supabase'
+import { getSupabaseSetupMessage, supabase, supabaseConfigured } from '@/lib/supabase'
 
 export default function Auth() {
   const navigate = useNavigate()
@@ -12,7 +12,10 @@ export default function Auth() {
 
   async function submit(e:FormEvent){
     e.preventDefault(); setMessage('')
-    if(!supabaseConfigured || !supabase){ setMessage('ابتدا Supabase را در فایل .env تنظیم کنید.'); return }
+    if(!supabaseConfigured || !supabase){
+      setMessage(getSupabaseSetupMessage() || 'ابتدا Supabase را تنظیم کنید.')
+      return
+    }
 
     try {
       const result = mode==='login'

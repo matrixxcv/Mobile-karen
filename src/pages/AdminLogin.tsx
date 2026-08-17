@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { supabase, supabaseConfigured } from '@/lib/supabase'
+import { getSupabaseSetupMessage, supabase, supabaseConfigured } from '@/lib/supabase'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function AdminLogin() {
@@ -22,7 +22,7 @@ export default function AdminLogin() {
     setMessage('')
 
     if (!supabaseConfigured || !supabase) {
-      setMessage('Supabase فعال نیست؛ متغیرهای محیطی را تنظیم کنید.')
+      setMessage(getSupabaseSetupMessage() || 'Supabase فعال نیست؛ متغیرهای محیطی را تنظیم کنید.')
       return
     }
 

@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { CheckCircle2, Loader2, Phone, Smartphone, Wrench } from 'lucide-react'
 import SectionHeading from '@/components/SectionHeading'
 import { REPAIR_PHONE, REPAIR_PHONE_TEL } from '@/data/repairs'
-import { supabase, supabaseConfigured } from '@/lib/supabase'
+import { getSupabaseSetupMessage, supabase, supabaseConfigured } from '@/lib/supabase'
 
 type FormState = {
   name: string
@@ -41,7 +41,7 @@ export default function RepairRequest() {
 
     try {
       if (!supabaseConfigured || !supabase) {
-        setMessage('Supabase فعال نیست؛ برای ثبت واقعی درخواست، متغیرهای محیطی را مقداردهی کنید.')
+        setMessage(getSupabaseSetupMessage() || 'Supabase فعال نیست؛ برای ثبت واقعی درخواست، متغیرهای محیطی را مقداردهی کنید.')
         setLoading(false)
         return
       }
